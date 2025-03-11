@@ -635,3 +635,285 @@ type NullablePerson = Nullable<Person>;
 枚举和常量枚举: 常量枚举只能使用常量枚举表达式，并且不同于常规的枚举，它们在编译阶段会被删除。 常量枚举成员在使用的地方会被内联进来。 之所以可以这么做是因为，常量枚举不允许包含计算成员。
 
 - 接口和类型别名: 两者都可以用来描述对象或函数的类型。与接口不同，类型别名还可以用于其他类型，如基本类型（原始值）、联合类型、元组。
+
+## 23. 解释 TypeScript 中的类型断言（Type Assertion）及其作用
+
+#### 类型：`基础`
+
+#### 级别：`W1`、`W2`、`W3`、`W4`、`W5`、`W6`
+
+#### 解答（2 分）
+
+- **1：** 类型断言是一种告诉编译器某个值的类型的方式，它允许开发者手动指定一个值的类型，而不是让编译器自动推断。有两种语法形式：as语法和尖括号语法。例如：
+
+```ts
+// as语法
+let someValue: any = "this is a string";
+let strLength: number = (someValue as string).length;
+
+// 尖括号语法
+let someValue: any = "this is a string";
+let strLength: number = (<string>someValue).length;
+```
+
+- **1：** 类型断言的作用主要是在某些情况下，当编译器无法准确推断类型或者开发者确定某个值的类型时，通过类型断言来告诉编译器，以便进行更准确的类型检查和代码提示，避免类型错误。
+
+## 24. 什么是 TypeScript 中的模块（Module）？如何在模块中导出和导入成员？
+
+#### 类型：`基础`
+
+#### 级别：`W1`、`W2`、`W3`、`W4`、`W5`、`W6`
+
+#### 解答（3 分）
+
+<details>
+
+- **1：** 模块定义：模块是 TypeScript 中用于组织和封装代码的一种方式，它可以将相关的代码、类型定义、函数等组合在一起，形成一个独立的单元，提高代码的可维护性和可复用性。
+- **1：** 导出成员：使用export关键字来导出模块中的成员，如变量、函数、类、接口等。可以在定义成员时直接使用export导出，也可以在模块末尾统一使用export导出。
+
+```ts
+// 方式一：直接导出
+export const name = 'Tom';
+export function sayHello() {
+    console.log('Hello');
+}
+// 方式二：统一导出
+const age = 18;
+function doSomething() {
+    console.log('Doing something');
+}
+export { age, doSomething };
+```
+
+- **1：** 导入成员：使用import关键字来导入模块中的成员，可以按需导入特定成员，也可以整体导入模块并通过别名访问成员。
+
+```ts
+// 按需导入
+import { name, sayHello } from './module';
+// 整体导入并使用别名
+import * as myModule from './module';
+console.log(myModule.name);
+myModule.sayHello();
+```
+
+</details>
+
+## 25. 描述一下 TypeScript 中keyof操作符的作用和使用场景
+
+#### 类型：`基础`
+
+#### 级别：`W1`、`W2`、`W3`、`W4`、`W5`、`W6`
+
+#### 解答（2 分）
+
+- **1：** keyof操作符用于获取类型的键类型。例如，`type K = keyof { a: number; b: string }`，K的类型就是`'a' | 'b'`。
+- **1：** 使用场景包括实现类型安全的对象访问，如根据键获取对象的值时确保键的类型正确。
+
+## 26. 如何实现一个类型工具 `IsNever<T>`，用于判断一个类型 T 是否为 never 类型？
+
+#### 类型：`基础`
+
+#### 级别：`W1`、`W2`、`W3`、`W4`、`W5`、`W6`
+
+#### 解答（2 分）
+
+- **2：** 使用 `[T]` extends `[never]` 来判断，因为直接 T extends never 会有特殊处理，而包装成元组可以正确判断。
+
+```ts
+// 答案
+type IsNever<T> = [T] extends [never]? true : false;
+// 测试
+type Result1 = IsNever<never>; // true
+type Result2 = IsNever<string>; // false
+```
+
+## 27. 实现一个类型工具 `Pop<T>`，用于移除元组类型 T 的最后一个元素
+
+#### 类型：`基础`
+
+#### 级别：`W1`、`W2`、`W3`、`W4`、`W5`、`W6`
+
+#### 解答（2 分）
+
+- **2：** 使用 infer 关键字来推断元组的前面部分 Rest 和最后一个元素，然后返回 Rest。
+
+```ts
+// 答案
+type Pop<T extends any[]> = T extends [...infer Rest, infer _] ? Rest : [];
+
+// 测试
+type Tuple = [1, 2, 3];
+type Result = Pop<Tuple>; // [1, 2]
+```
+
+## 28. 解释 TypeScript 中 infer 关键字的作用
+
+#### 类型：`基础`
+
+#### 级别：`W1`、`W2`、`W3`、`W4`、`W5`、`W6`
+
+#### 解答（2 分）
+
+- **2：** infer 关键字用于在条件类型中推断类型。它通常和 extends 一起使用，在类型匹配成功时，将匹配到的部分类型赋值给一个新的类型变量。
+
+## 29. 如何在 TypeScript 中实现一个深度只读（Deep Readonly）类型？
+
+#### 类型：`基础`
+
+#### 级别：`W1`、`W2`、`W3`、`W4`、`W5`、`W6`
+
+#### 解答（2 分）
+
+<details>
+
+- **2：** 答案如下：
+
+```ts
+type DeepReadonly<T> = {
+    readonly [P in keyof T]: T[P] extends object? DeepReadonly<T[P]> : T[P];
+};
+interface Example {
+    a: number;
+    b: {
+        c: string;
+        d: {
+            e: boolean;
+        };
+    };
+}
+const example: DeepReadonly<Example> = {
+    a: 1,
+    b: {
+        c: 'test',
+        d: {
+            e: true
+        }
+    }
+};
+// example.a = 2; // 报错，只读属性不能被重新赋值
+// example.b.c = 'new'; // 报错，深层属性也为只读
+```
+
+</details>
+
+## 30. 请解释 TypeScript 中类型断言和类型守卫的区别，并分别举例说明
+
+#### 类型：`基础`
+
+#### 级别：`W1`、`W2`、`W3`、`W4`、`W5`、`W6`
+
+#### 解答（2 分）
+
+<details>
+
+- **1：** 类型断言：类型断言是一种告诉 TypeScript 编译器某个变量具有特定类型的方式，它不会进行运行时检查，只是在编译阶段影响类型系统。开发者需要确保断言的正
+确性，否则可能导致运行时错误。
+
+```ts
+// 定义一个变量，类型为 unknown
+let value: unknown = 'hello';
+
+// 使用类型断言将 unknown 类型断言为 string 类型
+let strLength: number = (value as string).length;
+console.log(strLength); // 输出: 5
+```
+
+- **1：** 类型守卫：类型守卫是在运行时检查某个变量是否符合特定类型的条件，根据检查结果缩小变量的类型范围，使得在特定代码块内可以安全地使用该类型的属性和方法。
+
+```ts
+// 定义一个类型守卫函数，检查值是否为字符串
+function isString(value: unknown): value is string {
+    return typeof value === 'string';
+}
+
+let value: unknown = 'hello';
+if (isString(value)) {
+    // 在这个代码块内，TypeScript 知道 value 是 string 类型
+    let strLength: number = value.length;
+    console.log(strLength); // 输出: 5
+}
+```
+
+</details>
+
+## 31. 解释一下TypeScript中的字面量类型和联合类型的区别
+
+#### 类型：`基础`
+
+#### 级别：`W1`、`W2`、`W3`、`W4`、`W5`、`W6`
+
+#### 解答（8 分）
+
+<details>
+
+- **2：** 定义与概念
+  + 字面量类型：是指由具体的字面量值所构成的类型，比如1、'hello'、true等，每个具体的值就是一个字面量类型。它表示变量只能取特定的单一值。
+  + 联合类型：是由多个不同类型通过|运算符组合而成的类型，它表示变量可以是这些类型中的任意一种。
+- **2：** 作用与用途
+  + 字面量类型：主要用于精确地限定变量的取值范围，当我们希望变量只能取某个特定的值时，就可以使用字面量类型。例如，在表示一周中的某一天时，可以定
+  义`type Day = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday'`，这里的每个星期几就是一个字面量类型，通过这
+  种方式可以确保变量只能被赋值为这些特定的字符串值。
+  + 联合类型：用于在变量可能有多种不同类型的情况下，为其指定多种可能的类型。比如，一个函数的参数可能接受字符串或者数字，就可以定义为
+  `function foo(arg: string | number) {}`，这样参数arg就可以接受字符串类型的值或者数字类型的值。
+- **2：** 类型检查行为
+  + 字面量类型：在类型检查时，变量必须严格等于字面量的值才能通过类型检查。例如，定义const num: 5 = 5是正确的，但const num: 5 = 6就会报错，因为6不等于字面量类型5所允许的值。
+  + 联合类型：类型检查时，只要变量的值符合联合类型中的某一种类型，就可以通过类型检查。例如，对于`let value: string | number，value = 'hello'`或者`value = 123`都是
+  可以通过类型检查的，因为它们分别符合联合类型中的string和number类型。
+- **2：** 可扩展性
+  + 字面量类型：通常比较固定和单一，如果需要增加新的取值，就需要重新定义字面量类型。例如，在上述Day类型中，如果要增加一个新的休息日，就需要修改定义，添加新的字面量。
+  + 联合类型：具有较好的扩展性，当需要增加新的可能类型时，直接使用|运算符添加到联合类型中即可。比如，对于`function foo(arg: string | number)`，如果还需要支持布尔类型，只
+  需要修改为`function foo(arg: string | number | boolean)`。
+
+</details>
+
+## 32. 解释 keyof typeof 的组合用法
+
+#### 类型：`基础`
+
+#### 级别：`W1`、`W2`、`W3`、`W4`、`W5`、`W6`
+
+#### 解答（2 分）
+
+- **2：** typeof 用于获取一个值的类型，keyof 用于获取一个类型的所有键组成的联合类型。keyof typeof 通常用于获取一个对象值的所有属性名组成的联合类型。示例：
+
+```ts
+const colors = {
+    red: '#FF0000',
+    green: '#00FF00',
+    blue: '#0000FF'
+};
+type ColorKeys = keyof typeof colors; 
+// ColorKeys 类型为 'red' | 'green' | 'blue'
+```
+
+## 33. 简述 NonNullable 类型工具的作用
+
+#### 类型：`基础`
+
+#### 级别：`W1`、`W2`、`W3`、`W4`、`W5`、`W6`
+
+#### 解答（2 分）
+
+- **2：** `NonNullable<T>` 用于从类型 T 中排除 null 和 undefined 类型。示例：
+
+```ts
+type MaybeString = string | null | undefined;
+type DefiniteString = NonNullable<MaybeString>; 
+// DefiniteString 类型为 string
+```
+
+## 34. 如何定义一个只读数组类型？
+
+#### 类型：`基础`
+
+#### 级别：`W1`、`W2`、`W3`、`W4`、`W5`、`W6`
+
+#### 解答（1 分）
+
+- **1：** 使用 readonly 关键字，如 `readonly number[]` 或 `ReadonlyArray<number>`。示例代码如下：
+
+```ts
+const readonlyArr: readonly number[] = [1, 2, 3];
+// 以下操作会报错，因为数组是只读的
+// readonlyArr[0] = 10; 
+```

@@ -1,10 +1,11 @@
 import { defineConfig } from 'vitepress'
 import { getSpecificFilesInfo } from '../utils'
-import { questionsMenu } from './menu-config.mts';
+import { questionsMenu, trainingMenu } from './menu-config.mts';
 
 // https://vitepress.dev/reference/site-config
 export default async () => {
   const questionsSidebar = await genSpecSidebar(questionsMenu, 'src/questions')
+  const trainingSidebar = await genSpecSidebar(trainingMenu, 'src/training')
 
   return defineConfig({
     base: "/mb-front-end-interview/",
@@ -16,14 +17,15 @@ export default async () => {
       nav: [
         { text: '指南', link: '/src/guide/why', activeMatch: '/src/guide/' },
         { text: '题库', link: '/src/questions/front-base/1_HTML', activeMatch: '/src/questions/' },
-        { text: '训练', link: '/ing.md' }
+        { text: '训练', link: '/src/training/training-level/w1', activeMatch: '/src/training/' }
       ],
       sidebar: {
         '/src/guide/': [
           { text: '初衷', link: '/src/guide/why' },
           { text: '快速开始', link: '/src/guide/getting-started' },
         ],
-        '/src/questions/': questionsSidebar
+        '/src/questions/': questionsSidebar,
+        '/src/training/': trainingSidebar,
       },
       socialLinks: [
         { icon: 'github', link: 'https://github.com/syh-micro-build/mb-front-end-interview' }
@@ -44,6 +46,26 @@ export default async () => {
         formatOptions: {
           dateStyle: 'short',
           timeStyle: 'medium'
+        }
+      },
+      search: {
+        provider: 'local',
+        options: {
+          translations: {
+            button: {
+              buttonText: '搜索文档',
+              buttonAriaLabel: '搜索文档'
+            },
+            modal: {
+              noResultsText: '无法找到相关结果',
+              resetButtonTitle: '清除查询条件',
+              footer: {
+                selectText: '选择',
+                navigateText: '切换',
+                closeText: '关闭',
+              },
+            }
+          }
         }
       },
       returnToTopLabel: '回到顶部',

@@ -66,6 +66,14 @@ const questionsMenu = [
   }
 ]
 
+const trainingMenu = [
+  {
+    dirName: 'training-level',
+    menuName: '面试级别',
+    collapsed: false,
+  }
+]
 export {
-  questionsMenu
+  questionsMenu,
+  trainingMenu
 }
